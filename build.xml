@@ -1,0 +1,36 @@
+<project name="yuicompress-anttask" basedir="." default="dist">
+	<property file="${basedir}/build.properties" />
+
+	<path id="lib">
+		<fileset dir="${lib.dir}">
+			<include name="**/*.jar" />
+		</fileset>
+	</path>
+
+	<target name="clean">
+		<delete dir="${build.dir}" />
+	</target>
+
+	<target name="init">
+		<mkdir dir="${build.dir}" />
+		<mkdir dir="${build.classes}" />
+	</target>
+
+	<target name="compile" depends="clean,init">
+		<javac destdir="${build.classes}" target="${compile.level}" debug="${compile.debug}" deprecation="${compile.deprecation}" optimize="${compile.optimize}" failonerror="true" encoding="${build.encoding}">
+			<src path="${src.dir}" />
+			<classpath refid="lib" />
+		</javac>
+	</target>
+
+	<target name="dist" depends="compile">
+		<jar destfile="${build.dir}/${name}-${version}.jar">
+			<fileset dir="${build.classes}" excludes="**/.*" />
+		</jar>
+		<zip destfile="${build.dir}/${name}-${version}-src.zip">
+			<fileset dir="${src.dir}" excludes="**/.*" />
+		</zip>
+		
+		<delete dir="${build.classes}" />
+	</target>
+</project>
